@@ -73,7 +73,7 @@ function createImg(arr) {
     .map(
       img => `
   <li class="gallery-item">
-  <a class="gallery-link" href="large-image.jpg">
+  <a class="gallery-link" href="${img.original}">
     <img
       class="gallery-image"
       src="${img.preview}"
@@ -86,27 +86,32 @@ function createImg(arr) {
     )
     .join('');
 }
+
 function handleImagesClick(event) {
-  if (event.target === event.currentTarget) {
+  event.preventDefault();
+  if (event.target.nodeName !== 'IMG') {
     return;
   }
+
+  const imageSource = event.target.dataset.source;
+  const imageAlt = event.target.alt;
+
+  const instance = basicLightbox.create(
+    `<img src="${imageSource}" alt="${imageAlt}" width="1112" height="640">`,
+    {
+      onShow: instance => {
+        document.addEventListener('keydown', escKeyPressHandler);
+      },
+      onClose: instance => {
+        document.removeEventListener('keydown', escKeyPressHandler);
+      },
+    }
+  );
+  instance.show();
 }
-const instance = basicLightbox.create(
-  `
-    	<img src="${imageSource}" alt="${imageAlt}" width="1112" height="640">
-    `,
-  {
-    onShow: instance => {
-      document.addEventListener('keydown', escKeyPressHandler);
-    },
-    onClose: instance => {
-      document.removeEventListener('keydown', escKeyPressHandler);
-    },
-  }
-);
-instance.show();
+
 function escKeyPressHandler(event) {
   if (event.code === 'Escape') {
-    instance.close();
+    basicLightbox.close();
   }
 }
