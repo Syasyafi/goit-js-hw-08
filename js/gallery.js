@@ -63,7 +63,7 @@ const images = [
     description: 'Lighthouse Coast Sea',
   },
 ];
-const container = document.querySelector('.images');
+const container = document.querySelector('.gallery');
 
 container.insertAdjacentHTML('beforeend', createImg(images));
 container.addEventListener('click', handleImagesClick);
